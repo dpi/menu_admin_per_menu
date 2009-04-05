@@ -105,7 +105,7 @@ function menu_admin_per_menu_form_alter(&$form, $form_state, $form_id) {
         $perm_menus[] = $name;
       }
     }
-    if (count($perm_menus) > 0) {
+    if ((count($perm_menus) > 0) && is_array($form['menu']['parent']['#options'])) {
       $default_value = $form['menu']['parent']["#default_value"];
       $option_keys = array_keys($form['menu']['parent']['#options']);
       foreach ($option_keys as $option_key) {
