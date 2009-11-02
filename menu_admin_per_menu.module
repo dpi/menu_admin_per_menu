@@ -97,7 +97,7 @@ function menu_admin_per_menu_form_alter(&$form, $form_state, $form_id) {
       return;
     }
     $form['menu']['#access'] = FALSE;
-    
+
     $perm_menus = array();
     $menus = menu_get_menus();
     foreach ($menus as $name => $title) {
@@ -124,9 +124,6 @@ function menu_admin_per_menu_form_alter(&$form, $form_state, $form_id) {
         if (!$has_mlid) {
           $form['menu']['parent']['#default_value'] = $option_keys[0];
         }
-      }
-      else {
-        $form['menu']['#access'] = FALSE;
       }
     }
   }
