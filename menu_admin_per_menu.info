@@ -1,4 +1,5 @@
 ; $Id$
 name = Menu Admin per Menu
 description = Allows to give roles per menu admin permissions without giving them full administrer menu permission.
+package = Administration
 core = 6.x
