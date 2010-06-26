@@ -121,7 +121,7 @@ function menu_admin_per_menu_form_alter(&$form, $form_state, $form_id) {
       $option_keys = array_keys($form['menu']['parent']['#options']);
       if (count($option_keys) > 0) {
         $form['menu']['#access'] = TRUE;
-        if (!$has_mlid) {
+        if (!$has_mlid && !in_array($default_value, $option_keys)) {
           $form['menu']['parent']['#default_value'] = $option_keys[0];
         }
       }
