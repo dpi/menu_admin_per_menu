@@ -2,7 +2,6 @@
 name = Menu Admin per Menu
 description = Allows to give roles per menu admin permissions without giving them full administrer menu permission.
 package = Administration
-version = VERSION
 core = 7.x
 dependencies[] = menu
 files[] = menu_admin_per_menu.module
