@@ -1,4 +1,3 @@
-// $Id$
 
 MENU ADMIN PER MENU
 http://drupal.org/project/menu_admin_per_menu
