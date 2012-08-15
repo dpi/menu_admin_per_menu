@@ -1,5 +1,5 @@
 name = Menu Admin per Menu
-description = Allows to give roles per menu admin permissions without giving them full administrer menu permission.
+description = Allows to give roles per menu admin permissions without giving them full administer menu permission.
 package = Administration
 core = 7.x
 dependencies[] = menu
