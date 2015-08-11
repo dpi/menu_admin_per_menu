@@ -1,26 +1,23 @@
 <?php
 
 /**
- * @file menu_admin_per_menu.module
- * Main file for the menu_admin_per_menu module.
- *
- * By default, Drupal allows only users with administrer menu permission to add, modify or delete menu items.
- * In case you want for instance to let certain users manage primary links or secondary links but not navigation menu,
- * this module provides this functionality.
- * Developped by Henri MEDOT <henri.medot[AT]absyx[DOT]fr>
+ * @file
+ * Written by Henri MEDOT <henri.medot[AT]absyx[DOT]fr>
  * http://www.absyx.fr
  */
 
+use Drupal\Core\Access\AccessResult;
+
 /**
- * Implementation of hook_permission().
+ * Permission callback.
  */
-function menu_admin_per_menu_permission() {
-  $perms = array();
-  $menus = menu_get_menus();
+function menu_admin_per_menu_permissions() {
+  $permissions = [];
+  $menus = menu_ui_get_menus();
   foreach ($menus as $name => $title) {
-    $perms['administer '. $name .' menu items'] = array('title' => t('Administer %menu menu items', array('%menu' => $title)));
+    $permissions['administer ' . $name . ' menu items'] = array('title' => t('Administer %menu menu items', array('%menu' => $title)));
   }
-  return $perms;
+  return $permissions;
 }
 
 /**
@@ -62,17 +59,21 @@ function _menu_admin_per_menu_menu_overview_page() {
   return theme('table', array('header' => $header, 'rows' => $rows));
 }
 
+/**
+ * Custom access callback.
+ */
 function _menu_admin_per_menu_access() {
-  if (user_access('administer menu')) {
-    return TRUE;
+  $account = \Drupal::currentUser();
+  if ($account->hasPermission('administer menu')) {
+    return AccessResult::allowed();
   }
-  $perms = array_keys(menu_admin_per_menu_permission());
-  foreach ($perms as $perm) {
-    if (user_access($perm)) {
-      return TRUE;
+  $permissions = array_keys(menu_admin_per_menu_permissions());
+  foreach ($permissions as $permission) {
+    if ($account->hasPermission($permission)) {
+      return AccessResult::allowed();
     }
   }
-  return FALSE;
+  return AccessResult::forbidden();
 }
 
 function _menu_admin_per_menu_menu_access($menu = NULL) {
@@ -141,6 +142,7 @@ function _menu_admin_per_menu_get_perm_menus() {
 /**
  * Implementation of hook_form_FORM_ID_alter()
  */
+/*
 function menu_admin_per_menu_form_menu_edit_item_alter(&$form, &$form_state, $form_id) {
   if (isset($form['parent']) && !user_access('administer menu') && _menu_admin_per_menu_filter_parent_options($form)) {
     $option_keys = array_keys($form['parent']['#options']);
@@ -149,3 +151,4 @@ function menu_admin_per_menu_form_menu_edit_item_alter(&$form, &$form_state, $fo
     }
   }
 }
+*/
