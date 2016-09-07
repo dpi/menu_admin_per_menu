@@ -29,7 +29,7 @@ class MenuAdminPerMenuAccess implements MenuAdminPerMenuAccessInterface {
       foreach ($menus as $name => $title) {
         $permission = 'administer ' . $name . ' menu items';
         if ($account->hasPermission($permission)) {
-          $perms_menu[$permission] = $permission;
+          $perms_menu[$permission] = $name;
         }
       }
       \Drupal::moduleHandler()->alter('menu_admin_per_menu_get_permissions', $perms_menu, $account);
