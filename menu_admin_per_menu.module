@@ -20,8 +20,8 @@ function menu_admin_per_menu_form_alter(&$form, FormStateInterface $form_state, 
     || $form_object instanceof MenuLinkContentForm) {
     $account = \Drupal::currentUser();
     if (!$account->hasPermission('administer menu')) {
-      $options = &$form['menu_parent']['#options'];
-      $options = menu_admin_per_menu_filter_parent_options($account, $options);
+      $options = $form['menu_parent']['#options'];
+      $form['menu_parent']['#options'] = menu_admin_per_menu_filter_parent_options($account, $options);
     }
   }
   if ($form_object instanceof MenuForm) {
@@ -40,15 +40,22 @@ function menu_admin_per_menu_form_alter(&$form, FormStateInterface $form_state, 
 function menu_admin_per_menu_form_node_form_alter(&$form, FormStateInterface $form_state) {
   $account = \Drupal::currentUser();
   if (!$account->hasPermission('administer menu')) {
+    /** @var \Drupal\menu_admin_per_menu\MenuAdminPerMenuAccessInterface $allowedMenusService */
+    $allowedMenusService = \Drupal::service('menu_admin_per_menu.allowed_menus');
+    $allowed_menus = $allowedMenusService->getPerMenuPermissions($account);
+
+    $default_value = &$form['menu']['link']['menu_parent']['#default_value'];
+    list($current_menu, ) = explode(':', $default_value, 2);
+    // Disallow editing the menu item if there is a pre-existing menu item
+    // belonging to a menu the user does not have permission to access.
+    if (!empty($current_menu) && !in_array($current_menu, $allowed_menus)) {
+      $form['menu']['#access'] = FALSE;
+      return;
+    }
+
     $options = &$form['menu']['link']['menu_parent']['#options'];
     $options = menu_admin_per_menu_filter_parent_options($account, $options);
     $form['menu']['#access'] = count($options) > 0;
-
-    // Remove previous default if current user cannot access it.
-    $default_value = &$form['menu']['link']['menu_parent']['#default_value'];
-    if (!isset($options[$default_value])) {
-      $default_value = NULL;
-    }
   }
 }
 
